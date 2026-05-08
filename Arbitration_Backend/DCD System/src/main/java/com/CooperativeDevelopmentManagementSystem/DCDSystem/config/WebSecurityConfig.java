@@ -1,7 +1,3 @@
-
-
-
-
 package com.CooperativeDevelopmentManagementSystem.DCDSystem.config;
 
 import com.CooperativeDevelopmentManagementSystem.DCDSystem.security.AuthEntryPointJwt;
@@ -110,7 +106,7 @@ public class WebSecurityConfig {
        
         configuration.setAllowedOrigins(Arrays.asList(
                 "http://localhost:5173",
-                "http://localhost:5174"
+                "https://arbitration-system-coop.onrender.com"
                 
         ));
 
