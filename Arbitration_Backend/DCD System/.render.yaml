@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: DCD System
+    env: docker
+    dockerfilePath: Dockerfile
+    plan: free
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: production
