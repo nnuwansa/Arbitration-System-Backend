@@ -340,6 +340,7 @@ public class UserService {
     private final ArbitrationOfficerRepository arbitrationOfficerRepository;
     private final PasswordEncoder passwordEncoder;
 
+
     /**
      * Get all users
      * No need to populate - names are already in database
@@ -534,5 +535,28 @@ public class UserService {
         });
 
         System.out.println("Updated society name for " + users.size() + " users");
+    }
+
+    public void changeOwnPassword(String userEmail,
+                                  String currentPassword,
+                                  String newPassword) {
+
+        // Logged-in user find කරගන්න
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Current password check කරන්න
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new RuntimeException("Current password is incorrect");
+        }
+
+        // Same password එකක් ද බලන්න
+        if (passwordEncoder.matches(newPassword, user.getPassword())) {
+            throw new RuntimeException("New password cannot be the same as the current password");
+        }
+
+        // New password encode කර save කරන්න
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 }

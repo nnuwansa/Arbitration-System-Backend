@@ -1,13 +1,13 @@
 package com.CooperativeDevelopmentManagementSystem.DCDSystem.controller;
 
-
-
+import com.CooperativeDevelopmentManagementSystem.DCDSystem.dto.ChangePasswordRequest;
 import com.CooperativeDevelopmentManagementSystem.DCDSystem.dto.UpdateUserRequest;
 import com.CooperativeDevelopmentManagementSystem.DCDSystem.model.User;
 import com.CooperativeDevelopmentManagementSystem.DCDSystem.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,9 +21,31 @@ public class UserController {
 
     private final UserService userService;
 
+
+    /**
+     * Any logged-in user can change their OWN password
+     * POST /api/users/change-password
+     */
+    @PostMapping("/change-password")
+    public ResponseEntity<Map<String, String>> changeOwnPassword(
+            @RequestBody ChangePasswordRequest request,
+            Authentication authentication) {
+
+        String userEmail = authentication.getName();
+
+        if (request.getNewPassword() == null || request.getNewPassword().length() < 6) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", "නව මුරපදය අවම වශයෙන් අකුරු 6 ක් විය යුතුය"));
+        }
+
+        userService.changeOwnPassword(userEmail, request.getCurrentPassword(), request.getNewPassword());
+        return ResponseEntity.ok(Map.of("message", "මුරපදය සාර්ථකව වෙනස් කරන ලදී!"));
+    }
+
+
     /**
      * Get all users (Provincial Admin only)
-     * FIXED: Use hasAuthority instead of hasRole to avoid ROLE_ prefix issues
+     * Use hasAuthority instead of hasRole to avoid ROLE_ prefix issues
      */
     @GetMapping
     @PreAuthorize("hasAuthority('PROVINCIAL_ADMIN')")
@@ -34,7 +56,7 @@ public class UserController {
 
     /**
      * Get users by district (District Admin)
-     * FIXED: Use hasAuthority instead of hasRole
+     * Use hasAuthority instead of hasRole
      */
     @GetMapping("/district/{districtId}")
     @PreAuthorize("hasAnyAuthority('DISTRICT_ADMIN', 'PROVINCIAL_ADMIN')")
@@ -113,3 +135,4 @@ public class UserController {
         return ResponseEntity.ok(statistics);
     }
 }
+

@@ -329,6 +329,8 @@ public class Borrower {
     private BigDecimal loanAmount;
     private BigDecimal outstandingLoanAmount; // හිග ණය ශේෂය
     private BigDecimal interest;
+    private LocalDate interestFromDate;   // පොලිය ගණනය කිරීමේ ආරම්භ දිනය
+    private LocalDate interestToDate;     // පොලිය ගණනය කිරීමේ අවසාන දිනය
     private BigDecimal interestRate;
     private BigDecimal stationeryFees;
 
@@ -539,6 +541,22 @@ public class Borrower {
 
     public void setInterest(BigDecimal interest) {
         this.interest = interest;
+    }
+
+    public LocalDate getInterestFromDate() {
+        return interestFromDate;
+    }
+
+    public void setInterestFromDate(LocalDate interestFromDate) {
+        this.interestFromDate = interestFromDate;
+    }
+
+    public LocalDate getInterestToDate() {
+        return interestToDate;
+    }
+
+    public void setInterestToDate(LocalDate interestToDate) {
+        this.interestToDate = interestToDate;
     }
 
     public BigDecimal getInterestRate() {
